@@ -1,4 +1,4 @@
-name: Build and Deploy Application
+name: Build and Deploy Lambda
 
 env:
     ARTIFACT_NAME: csye6225-lambda.zip
@@ -6,7 +6,7 @@ env:
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   lambda:
@@ -56,4 +56,3 @@ jobs:
             --function-name  assignmentlambda \
             --s3-bucket ${{ secrets.S3_SERVERLESS_BUCKET}} \
             --s3-key csye6225-lambda
-          
