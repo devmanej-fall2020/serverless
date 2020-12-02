@@ -52,5 +52,5 @@ jobs:
       - name: Lambda Update Call
         run: |
             aws lambda update-function-code \
-            --function-name  csye6225_lambda \
+            --function-name  csye6225 \
             --zip-file fileb://serverless_artifact/${{ env.ARTIFACT_NAME }}
