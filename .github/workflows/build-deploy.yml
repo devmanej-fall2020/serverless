@@ -53,6 +53,5 @@ jobs:
         run: |
             echo 'lambda code'
             aws lambda update-function-code \
-            --function-name  assignmentlambda \
-            --s3-bucket ${{ secrets.S3_SERVERLESS_BUCKET}} \
-            --s3-key csye6225-lambda
+          --function-name  csye6225_lambda \
+          --zip-file fileb://serverless_artifact/${{ env.ARTIFACT_NAME }}
