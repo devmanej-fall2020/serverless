@@ -17,10 +17,10 @@ exports.handler = function(event, context, callback) {
         },
         Message: {
           Body: {
-            Text: { Data: "This is a notification message from WebApp. Please open and check your request. " },
+            Text: {  Data: message },
           },
     
-          Subject: { Data: message },
+          Subject: { Data: "This is a notification message from WebApp. Please open and check your request. " },
         },
         Source: "clouddays123@gmail.com",
       };
