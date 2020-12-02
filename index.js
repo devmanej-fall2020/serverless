@@ -8,6 +8,7 @@ exports.handler = function(event, context, callback) {
 // console.log('Received event:', JSON.stringify(event, null, 4));
 
     var message = event.Records[0].Sns.Message;
+    var email = event.Records[0].Sns.Message.username; 
     console.log('Message received from SNS:', message);
 
     var params = {
@@ -16,10 +17,10 @@ exports.handler = function(event, context, callback) {
         },
         Message: {
           Body: {
-            Text: { Data: "Test" },
+            Text: { Data: "This is a notification message from WebApp. Please open and check your request. " },
           },
     
-          Subject: { Data: "Test Email" },
+          Subject: { Data: message },
         },
         Source: "clouddays123@gmail.com",
       };
