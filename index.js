@@ -1,19 +1,21 @@
-var aws = require("aws-sdk");
-var ses = new aws.SES({ region: "us-east-1" });
-
-// Create DynamoDB document client
-var DynamoDocClient = new aws.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+const AWS = require('aws-sdk');
+var ses = new AWS.SES({ region: "us-east-1" });
 
 
-console.log('Loading function');
+const timetolive = 900;
 
-exports.handler = function(event, context, callback) {
-// console.log('Received event:', JSON.stringify(event, null, 4));
 
+
+var DynamoDocClient = new AWS.DynamoDB.DocumentClient({
+    region: 'us-east-1'
+});
+
+exports.handler = (event, context, callback) => {
+  
     console.log(event.Records[0].Sns.Message);
-        
-        
-    var message = JSON.parse(event.Records[0].Sns.Message);
+    
+    
+   var message = JSON.parse(event.Records[0].Sns.Message);
     console.log(message);
     
     var id = event.Records[0].Sns.MessageId;
@@ -21,12 +23,12 @@ exports.handler = function(event, context, callback) {
 
     var parameter = {
         Item: {
-          'id': event.Records[0].Sns.MessageId,
+            'id': event.Records[0].Sns.MessageId,
           'EMAIL_ADDRESS': message.email_address,
           'QUESTION_ID': message.question_id,
           'ANSWER_ID': message.answer_id,
           'ANSWER_TEXT': message.answer_text
-
+  
         },
         TableName: "csye6225"
     };
@@ -49,7 +51,7 @@ exports.handler = function(event, context, callback) {
     }
     putDynamoAsync();
 
-    var params = {
+        var ses_params = {
         Destination: {
           ToAddresses: ["jai.subash@hotmail.com"]
         },
@@ -64,9 +66,7 @@ exports.handler = function(event, context, callback) {
       };
      
 
-    return ses.sendEmail(params).promise()
+    return ses.sendEmail(ses_params).promise()
 
     callback(null, "Success");
-
-    
-};
+}
