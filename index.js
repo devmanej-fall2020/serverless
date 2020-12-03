@@ -53,44 +53,19 @@ exports.handler = (event, context, callback) => {
         });
     }
     
+    ////////////////////////////////////////////////////////////////
     
     async function putDynamoAsync(){
         var inserter = await putIntoDynamo();
     }
-    putDynamoAsync();
+    
     
     ///////////////////////////////////////////////////////////////
     
-    //function to get from dynamo db
-    function getFromDynamo(){
+    //send email function
+    function sendEmail(){
         
-      var params = {
-      ExpressionAttributeNames: {
-       "#QID":  "QUESTION_ID",
-       "#EM":  "EMAIL_ADDRESS",
-       "#ANS":  "ANSWER_TEXT",
-       '#LNK': "LINK"
-      }, 
-      ExpressionAttributeValues: {
-       ":QUESTION_ID": message.question_id,
-       ":EMAIL_ADDRESS": message.email_address,
-       ":ANSWER_TEXT": message.answer_text,
-       ":LINK": message.link
-       
-      }, 
-      FilterExpression: "#QID = :QUESTION_ID AND #EM = :EMAIL_ADDRESS AND #ANS = :ANSWER_TEXT AND #LNK = :LINK",
-      ConsistentRead: true ,
-      TableName: "csye6225"
-     };
-     
-     DynamoDocClient.scan(params, function(err, data) {
-       if (err) console.log(err, err.stack); // an error occurred
-       else     {
-           console.log(data.Count);
-           console.log(data);
-           console.log(message.link);
-           if(data.Count == (0)){
-               var params = {
+        var params = {
                 Destination: {
                   ToAddresses: [message.email_address]
                 },
@@ -140,15 +115,71 @@ exports.handler = (event, context, callback) => {
              
         
             return ses.sendEmail(params).promise()
+        
+    }
+    
+    
+    /////////////////////////////////////////////////////////////
+    
+    //function to get from dynamo db
+    function getFromDynamo(){
+        
+      var params = {
+      ExpressionAttributeNames: {
+       "#QID":  "QUESTION_ID",
+       "#EM":  "EMAIL_ADDRESS",
+       "#ANS":  "ANSWER_TEXT",
+       '#LNK': "LINK"
+      }, 
+      ExpressionAttributeValues: {
+       ":QUESTION_ID": message.question_id,
+       ":EMAIL_ADDRESS": message.email_address,
+       ":ANSWER_TEXT": message.answer_text,
+       ":LINK": message.link
+       
+      }, 
+      FilterExpression: "#QID = :QUESTION_ID AND #EM = :EMAIL_ADDRESS AND #ANS = :ANSWER_TEXT AND #LNK = :LINK",
+      ConsistentRead: true ,
+      TableName: "csye6225"
+     };
+     
+     DynamoDocClient.scan(params, function(err, data) {
+       if (err) console.log(err, err.stack); // an error occurred
+       else     {
+           console.log(data.Count);
+           console.log(data);
+           console.log(message.link);
+           if(data.Count == (0)){
+               sendEmail();
+               
            }
               }        // successful response
      });
     }
     
+    //////////////////////////////////////////////////////////////
+    
      async function getFromDynamoAsync(){
         var caller = await getFromDynamo();
     }
-    getFromDynamoAsync();
+    
+    ///////////////////////////////////////////////////////////////
+    
+    //check answer text and answer id for N/A
+    
+    function checkForDelete(){
+        if(message.answer_text =="N/A" && message.answer_id == "N/A" ){
+           sendEmail();
+           putDynamoAsync();
+        }
+        else{
+            getFromDynamoAsync();
+            putDynamoAsync();
+            
+        }
+    }
+    
+    checkForDelete();
     
     
 
