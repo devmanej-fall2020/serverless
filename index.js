@@ -1,6 +1,9 @@
-const AWS = require('aws-sdk');
-var ses = new AWS.SES({ region: "us-east-1" });
 
+const AWS = require('aws-sdk');
+
+var simpleemailservice = new AWS.SES({
+    region: 'us-east-1'
+});
 
 const timetolive = 900;
 
@@ -51,22 +54,4 @@ exports.handler = (event, context, callback) => {
     }
     putDynamoAsync();
 
-        var ses_params = {
-        Destination: {
-          ToAddresses: ["jai.subash@hotmail.com"]
-        },
-        Message: {
-          Body: {
-            Text: {  Data: message },
-          },
-    
-          Subject: { Data: "This is a notification message from WebApp. Please open and check your request. " },
-        },
-        Source: "clouddays123@gmail.com",
-      };
-     
-
-    return ses.sendEmail(ses_params).promise()
-
-    callback(null, "Success");
 }
