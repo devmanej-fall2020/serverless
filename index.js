@@ -68,14 +68,17 @@ exports.handler = (event, context, callback) => {
       ExpressionAttributeNames: {
        "#QID":  "QUESTION_ID",
        "#EM":  "EMAIL_ADDRESS",
-       "#ANS":  "ANSWER_TEXT"
+       "#ANS":  "ANSWER_TEXT",
+       '#LNK': "LINK"
       }, 
       ExpressionAttributeValues: {
        ":QUESTION_ID": message.question_id,
        ":EMAIL_ADDRESS": message.email_address,
-       ":ANSWER_TEXT": message.answer_text
+       ":ANSWER_TEXT": message.answer_text,
+       ":LINK": message.link
+       
       }, 
-      FilterExpression: "#QID = :QUESTION_ID AND #EM = :EMAIL_ADDRESS AND #ANS = :ANSWER_TEXT ",
+      FilterExpression: "#QID = :QUESTION_ID AND #EM = :EMAIL_ADDRESS AND #ANS = :ANSWER_TEXT AND #LNK = :LINK",
       ConsistentRead: true ,
       TableName: "csye6225"
      };
@@ -86,7 +89,7 @@ exports.handler = (event, context, callback) => {
            console.log(data.Count);
            console.log(data);
            console.log(message.link);
-           if(data.Count == (0 || 1)){
+           if(data.Count == (0)){
                var params = {
                 Destination: {
                   ToAddresses: [message.email_address]
