@@ -2,7 +2,7 @@ var aws = require("aws-sdk");
 var ses = new aws.SES({ region: "us-east-1" });
 
 // Create DynamoDB document client
-var docClient = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+var DynamoDocClient = new aws.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 
 
 console.log('Loading function');
