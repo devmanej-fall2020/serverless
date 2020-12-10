@@ -110,7 +110,7 @@ exports.handler = (event, context, callback) => {
             
                   Subject: { Data: "This is a notification message from WebApp" },
                 },
-                Source: "clouddays123@gmail.com",
+                Source: "webapp@prod.jaisubashdevmane.me",
               };
              
         
